@@ -1,0 +1,7 @@
+{
+  "name": "GettingStartedWithIonic",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
