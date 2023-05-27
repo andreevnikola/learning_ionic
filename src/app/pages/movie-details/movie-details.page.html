@@ -18,6 +18,7 @@
     <ion-card>
       <img [src]="movie.poster_path" />
       <ion-card-header>
+        <ion-card-subtitle> {{movie.release_date | date}} </ion-card-subtitle>
         <ion-card-title> {{movie.title}} </ion-card-title>
       </ion-card-header>
       <ion-card-content
@@ -28,12 +29,39 @@
       </ion-card-content>
     </ion-card>
     <ion-card>
+      <iframe
+        *ngIf="trailer"
+        [src]="trailer.key | safe: 'resourceUrl'"
+        allowfullscreen
+        frameborder="0"
+        [height]="videoHeight"
+      ></iframe>
       <ion-card-header>
         <ion-card-subtitle>{{movie.vote_count}} rated</ion-card-subtitle>
         <ion-title color="primary" ion-title
           >Rating: {{movie.vote_average}}</ion-title
         >
       </ion-card-header>
+    </ion-card>
+    <ion-card *ngIf="movie" style="padding: 5px">
+      <ion-header
+        collapse="condense"
+        [ngStyle]="{'background-image': 'url(' + movie.backdrop_path + ')'}"
+        style="padding: 15px; padding-left: 25px"
+      >
+        <ion-card-title style="font-size: 40px"> Videos: </ion-card-title>
+        <ion-card-subtitle style="font-size: 10px"
+          >{{movie.title}}</ion-card-subtitle
+        >
+      </ion-header>
+      <iframe
+        *ngFor="let relatedVideo of relatedVideos"
+        [src]="relatedVideo.key | safe: 'resourceUrl'"
+        allowfullscreen
+        frameborder="0"
+        [height]="videoHeight"
+        style="margin-top: 5px"
+      ></iframe>
     </ion-card>
   </ng-container>
 </ion-content>

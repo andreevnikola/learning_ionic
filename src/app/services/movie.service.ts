@@ -27,6 +27,25 @@ export interface IMovie {
   vote_count: number;
 }
 
+export interface Videos {
+  id: number;
+  results: Video[];
+  trailer?: Video | undefined;
+}
+
+export interface Video {
+  iso_639_1: string;
+  iso_3166_1: string;
+  name: string;
+  key: string;
+  site: string;
+  size: number;
+  type: string;
+  official: boolean;
+  published_at: string;
+  id: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -41,8 +60,7 @@ export class MovieService {
       .pipe(
         map((movies: ITopRatedMovies) => {
           const movieResults = movies.results.map((movie: IMovie) => {
-            const posterPath = `${environment.images}/w92${movie.poster_path}`;
-            movie.poster_path = posterPath;
+            movie.poster_path = `${environment.images}/w92${movie.poster_path}`;
             return movie;
           });
           movies.results = movieResults;
@@ -58,9 +76,38 @@ export class MovieService {
       )
       .pipe(
         map((movie: IMovie) => {
-          const posterPath = `${environment.images}/w400${movie.poster_path}`;
-          movie.poster_path = posterPath;
+          movie.poster_path = `${environment.images}/w400${movie.poster_path}`;
+          movie.backdrop_path = `${environment.images}/w400${movie.backdrop_path}`;
           return movie;
+        })
+      );
+  }
+
+  getVideo(id: string) {
+    return this.http
+      .get<Videos>(
+        `https://api.themoviedb.org/3/movie/${id}/videos?api_key=${environment.apiKey}`
+      )
+      .pipe(
+        map((data: Videos) => {
+          let trailer;
+          data.results.forEach((data: Video) => {
+            if (data.type === 'Trailer') {
+              console.log('gay');
+              trailer = data;
+              trailer.key = `https://www.youtube.com/embed/${data.key}`;
+              return;
+            }
+          });
+          data.results = data.results
+            .filter((data) => data.site == 'YouTube')
+            .slice(0, 3);
+          data.results.map((data: Video) => {
+            data.key = `https://www.youtube.com/embed/${data.key}`;
+            return data;
+          });
+          data.trailer = trailer;
+          return data;
         })
       );
   }

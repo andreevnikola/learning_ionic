@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { MovieDetailsPageRoutingModule } from './movie-details-routing.module';
 
 import { MovieDetailsPage } from './movie-details.page';
+import { SafePipeModule } from 'safe-pipe';
 
 @NgModule({
   imports: [
@@ -14,6 +15,7 @@ import { MovieDetailsPage } from './movie-details.page';
     FormsModule,
     IonicModule,
     MovieDetailsPageRoutingModule,
+    SafePipeModule,
   ],
   declarations: [MovieDetailsPage],
 })
